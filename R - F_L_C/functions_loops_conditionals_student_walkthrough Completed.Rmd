@@ -1,0 +1,254 @@
+## Functions and Conditionals
+
+### Conditionals
+
+The basic syntax for an if statement goes like this:
+
+```{r}
+if (logical statement) {
+  do something
+} else {
+  do something else
+}
+```
+
+The logical statements should boil down to a boolean; for example:
+
+```{r}
+a <- 10
+if(a <= 5){
+  print(a)
+} else{
+  print('it is more than 5')
+}
+
+```
+
+We can also add else if statements in the middle if we need more options.
+
+```{r}
+a <- 15
+
+if(a <= 5) {
+  print('small')
+} else if(a > 5 & a <= 10) {
+  print('medium')
+} else if (a > 10 | a == 7) {
+  print('large')
+} else {
+  print('huge')
+}
+```
+
+Neat! We can also nest conditionals just like we do in Python.
+
+```{r}
+a <- 5
+if(a/2 != 0) {
+  if(a==5){
+    print('a is 5')
+  }
+}
+    
+```
+
+Neat! Now, let's look at another core part of R programming - Loops!
+
+### Loops
+
+```{r}
+for(value in 1:5) {
+  # Paste is a concatenation function
+  print(paste(value, 'is greater than', value -1))
+}
+```
+
+We can also do nifty stuff with our vectors, such as apply changes to specific indices of our data.
+
+```{r}
+a_vector <- c(1,1,1,1,1,1,1,1,1)
+
+# Change the first, third, and sixth elemnets to the value 6
+
+for (i in c(1,3,6)) {
+  a_vector[i] <- 6
+}
+
+a_vector
+```
+
+We can loop over more than just lists:
+
+```{r}
+mat <- matrix(1, nrow = 2, ncol = 2)
+mat
+
+for(row in 1:2){
+  for (col in 1:2){
+    mat[row,col] <- 0
+    print(mat)
+  }
+}
+```
+
+Like Python, we have while loops in R:
+
+```{r}
+b <- 0 
+while(b<10){
+  #increase b by 2
+  b <- b+2
+  #print b
+  print(b)
+}
+```
+
+## Functions
+
+When should we use functions?
+
+```{r}
+our_function <- function(optional_params){
+  # do some stuff
+  
+}
+
+```
+
+An example:
+
+```{r}
+# Start with a vector of temperatures
+test_temp <- c(16.550540, 26.942005, 32.591088, 8.580116, 28.003873, 28.003873, 28.542391, 20.976820, 21.173577, 21.048836, 18.769735)
+
+# Then we want a function that converts from C to F:
+c_to_f <- function(dat){
+  temp_fahr <- dat*(9/5) + 32
+
+  return(temp_fahr)
+}
+#print(c_to_f(26))
+
+```
+
+This is all cool.. but it didn't do anything. We need to call the function!
+
+```{r}
+data_fahr <- c_to_f(test_temp)
+data_fahr
+```
+
+Notice that in the background here, we are looping over each item in the array, but we never write a for loop! Keep this in mind, since when you pass in a large data set, the changes made by functions aren't quite immediate - the computer does have to go over each item in your data set, and change them one at a time.
+
+A shortcut of sorts is to use the `apply()` function, which operates very similarly to Python's `map()`. Note that `apply` syntax goes as follows: `apply(X, MARGIN, FUN)` where X is the data set to use, MARGIN is specification for rows or columns, and FUN is the function to apply.
+
+```{r}
+test_mat <- matrix(c(1,1,1,2,2,2), nrow <- 2)
+#test_mat
+# 1 is for rows, 2 is for columns
+apply(test_mat,2,sum)
+
+```
+
+It is common to use `mean`, `median`, `sum`, `min`, or `max` with `apply`, but we can also use our user-defined functions as well. Note that apply() only works with matrices.
+
+```{r}
+test_temp_mat <- matrix(c(16.550540, 26.942005, 32.591088, 8.580116, 28.003873, 28.003873, 28.542391, 20.976820, 21.173577, 21.048836, 18.769735), nrow = 2)
+
+apply(test_temp_mat, 1, c_to_f)
+```
+
+### Homework
+
+1.  Do 5 CodeWars problems in R. Share your solutions here:
+
+    ```{r}
+#1. Codewars problem FIXME: Replace all dots
+    # original problem: 
+    # replace_dots <- function(s){
+    #gsub(".",'-',s)
+    #}
+    #FIXED
+    replace_dots <- function(s){
+      gsub('[,]','-',s)
+    }
+  
+  #2 Codewars problem Returning Strings
+      # Make a function that will return a greeting statement that uses an input
+      # return "Hello, <name> how are you doing today?"
+    # my solution:
+    greet <- function(name){
+      paste("Hello,", name, "how are you doing today?")
+    }
+  
+  #3 Codewars problem Remove exclamation marks
+      # Write function that removes all exclamation marks from a given string
+    # My solution:
+    remove_exclamation_marks <- function(s){
+      gsub("!","",s)
+    }
+  
+  #4 Codewars problem The Wide-Mouthed frog!
+    # create a  method that takes one argument 'animal' which corresponds to the animal encountered by the frog.
+    # If the animal is an alligator, return 'small'. else return 'wide'
+  # My solution:
+    mouth_size <- function(animal){
+      if(tolower(animal) == 'alligator'){
+        return('small')
+      } else {
+        return('wide')
+      }
+    }
+  
+  #5 Codwars problem Remove String Spaces!
+    # Remove all spaces in a given string
+    library(stringr)
+    no_space <- function(x){
+      str_replace_all(x,' ','')
+    }
+    
+    ```
+
+2.  Create a function that checks an input of type `int` and returns fizz if the number is a multiple of 3, buzz if the number is a multiple of 5, and fizzbuzz if the number is a multiple of 3 and 5.
+
+    ```{r}
+soda_pop <- function(n){
+  if(n %% 3 == 0 & n %% 5 == 0){
+    return('fizzbuzz')
+  } else if(n%%3 == 0){
+    return('fizz')
+  } else if(n%%5 ==0){
+    return('buzz')
+  } else{
+    return('No soda for you')
+  }
+}
+soda_pop(15)
+soda_pop(9)
+soda_pop(10)
+soda_pop(4)
+    ```
+
+3.  **Mario Challenge:** In the classic Super Mario games, Mario ends each level by ascending a flight of stairs and leaping off the top to arrive at the castle at the end. (See [here](https://youtu.be/-avspZlbOWU?t=55) for details). We can imagine that each of the bricks of the stairs is a character X. Create a function that prints out a set of stairs. For example:
+
+    If the function is called marioStairs() and we pass in the value 4, we would expect to see stairs with a length of 4 and a height of 4:
+
+    X
+
+    XX
+
+    XXX
+
+    XXXX
+
+    ```{r}
+    # You may feel more comfortable figuring this out in Python first, then translating into R later.
+    
+stairs_mario <- function(n) {
+  s <- matrix("", n, n)
+  s[!upper.tri(s)[,n:1]] <- 'X'
+  s
+}
+    print(stairs_mario(10), quote = FALSE)
+    
+    ```
